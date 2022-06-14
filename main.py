@@ -6,10 +6,12 @@ from typing import Union, Optional
 from operator import add, sub, mul, truediv
 from random import choice , randint
 import pyperclip
+import requests
 
 import design
 import designc
 import designPK
+import designip
 
 operations = {
     '+': add,
@@ -35,6 +37,7 @@ class Win(QMainWindow):
 
         self.ui.pushButton.clicked.connect(calcstart)
         self.ui.pushButton_2.clicked.connect(passkstart)
+        self.ui.pushButton_3.clicked.connect(ipinfostart)
 
 class Calculator(QMainWindow):
     def __init__(self):
@@ -310,17 +313,106 @@ class Passk(QMainWindow):
             password += choice(chars)
         self.ui.label.setText(password)
 
+
+class IPInfo(QMainWindow):
+    def __init__(self):
+        super(IPInfo, self).__init__()
+        self.ui = designip.Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        self.ui.pushButton.clicked.connect(self.main)
+
+    def get_info_by_ip(self, ip='127.0.0.1'):
+        try:
+            response = requests.get(url=f'http://ip-api.com/json/{ip}').json()
+        
+            dataip = {
+                '[IP]': response.get('query'),
+            }
+#LehaBezuglov
+            dataprov = {
+                '[Int prov]': response.get('isp')
+            }
+
+            dataorg = {
+                '[Org]': response.get('org')
+            }
+#RussiaTop
+            datacountry = {
+                '[Country]': response.get('country')
+            }
+#PutinTop    
+            datareg = {
+                '[Region Name]': response.get('regionName')
+            }
+
+            datacity = {
+                '[City]': response.get('city')
+            }
+
+            datazip = {
+                '[ZIP]': response.get('zip')
+            }
+
+            datalat = {
+                '[Lat]': response.get('lat')
+            }
+
+            datalon = {
+                '[Lon]': response.get('lon')
+            }
+            for k, v in dataip.items():
+                self.ui.label_2.setText(f'{k} : {v}')
+
+            for k, v in dataprov.items():
+                self.ui.label_3.setText(f'{k} : {v}')
+
+            for k, v in dataorg.items():
+                self.ui.label_4.setText(f'{k} : {v}')
+
+            for k, v in datacountry.items():
+                self.ui.label_5.setText(f'{k} : {v}')
+
+            for k, v in datareg.items():
+                self.ui.label_6.setText(f'{k} : {v}')
+
+            for k, v in datacity.items():
+                self.ui.label_7.setText(f'{k} : {v}')
+
+            for k, v in datazip.items():
+                self.ui.label_8.setText(f'{k} : {v}')
+
+            for k, v in datalat.items():
+                self.ui.label_9.setText(f'{k} : {v}')
+
+            for k, v in datalon.items():
+                self.ui.label_10.setText(f'{k} : {v}')
+        
+        
+        except requests.exceptions.ConnectionError:
+            self.ui.label_2.setText('[!] Please check your connection!')
+
+    def main(self):
+        ip = self.ui.lineEdit.text()
+    
+        self.get_info_by_ip(ip=ip)
+
 def calcstart():
     clc.show()
 
 def passkstart():
     pk.show()
 
+def ipinfostart():
+    ipinfo.show()
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
+    ipinfo = IPInfo()
     pk = Passk()
     clc = Calculator()
+
     win = Win()
     win.show()
 
