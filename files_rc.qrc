@@ -1,7 +1,0 @@
-<RCC>
-  <qresource prefix="icons">
-    <file>icons/calculator.ico</file>
-    <file>icons/global-_1_.ico</file>
-    <file>icons/key-chain.ico</file>
-  </qresource>
-</RCC>
